@@ -160,8 +160,7 @@ router.get('/me', async (req, res) => {
   const token = req.cookies.session
 
   if (!token) {
-    res.status(StatusCodes.OK).json({ user: null })
-    return
+    throw new UnauthorizedError('No session found')
   }
 
   const session = await prisma.session.findUnique({
@@ -171,8 +170,7 @@ router.get('/me', async (req, res) => {
 
   if (!session || session.expiresAt < new Date()) {
     res.clearCookie('session')
-    res.status(StatusCodes.OK).json({ user: null });
-    return
+    throw new UnauthorizedError('Session expired')
   }
 
   res.status(StatusCodes.OK).json({
