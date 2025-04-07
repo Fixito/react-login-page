@@ -157,26 +157,16 @@ router.post('/signout', requireAuth, async (req, res) => {
 
 // Get current user
 router.get('/me', async (req, res) => {
-  const token = req.cookies.session
+  const user = req.user
 
-  if (!token) {
-    throw new UnauthorizedError('No session found')
-  }
-
-  const session = await prisma.session.findUnique({
-    where: { token },
-    include: { user: true },
-  })
-
-  if (!session || session.expiresAt < new Date()) {
-    res.clearCookie('session')
-    throw new UnauthorizedError('Session expired')
+  if (!user) {
+    throw new UnauthorizedError('Not authenticated')
   }
 
   res.status(StatusCodes.OK).json({
-    id: session.user.id,
-    email: session.user.email,
-    name: session.user.name,
+    id: user.id,
+    email: user.email,
+    name: user.name,
   })
 })
 
