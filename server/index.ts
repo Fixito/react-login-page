@@ -6,7 +6,6 @@ dotenv.config();
 
 import cookieParser from "cookie-parser";
 import { StatusCodes } from "http-status-codes";
-import { requireAuth } from "./middleware/auth.js";
 import { errorHandler } from "./middleware/error-handler.js";
 import { notFound } from "./middleware/not-found.js";
 import authRoutes from './routes/auth.js';
@@ -27,7 +26,7 @@ app.use("/api", (req, _res, next) => {
 });
 
 // Public routes
-app.use('/api/auth', requireAuth, authRoutes);
+app.use('/api/auth', authRoutes);
 
 app.get("/api/health", (_req, res) => {
   res.status(StatusCodes.OK).json({ status: "OK" });

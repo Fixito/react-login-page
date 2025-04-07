@@ -156,7 +156,7 @@ router.post('/signout', requireAuth, async (req, res) => {
 })
 
 // Get current user
-router.get('/me', async (req, res) => {
+router.get('/me', requireAuth, async (req, res) => {
   const user = req.user
 
   if (!user) {
